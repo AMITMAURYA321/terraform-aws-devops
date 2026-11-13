@@ -4,27 +4,48 @@
 
 This project demonstrates how to provision AWS infrastructure using Terraform with a modular and reusable approach.
 
-The infrastructure includes an AWS VPC, public subnets across two Availability Zones, Security Groups, an EC2 instance, and an Application Load Balancer.
+The infrastructure includes an AWS VPC, two public subnets across two Availability Zones, Security Groups, an EC2 instance, and an Application Load Balancer.
 
 The application was successfully deployed and accessed through the ALB DNS name.
 
 ## Architecture
 
-```text
-                  Internet
-                     |
-                     v
-          Application Load Balancer
-                     |
-                     v
-                Target Group
-                     |
-                     v
-                EC2 Instance
-                     |
-                     v
-               Apache Web Server
+```mermaid
+flowchart TD
+    User["Internet / User"]
+    IGW["Internet Gateway"]
+
+    subgraph AWS["AWS Cloud - ap-south-1"]
+        subgraph VPC["VPC - 10.0.0.0/16"]
+            subgraph AZ1["Availability Zone - ap-south-1a"]
+                Subnet1["Public Subnet 1"]
+                EC2["EC2 Instance - t3.micro"]
+                Apache["Apache Web Server"]
+                Subnet1 --> EC2
+                EC2 --> Apache
+            end
+
+            subgraph AZ2["Availability Zone - ap-south-1b"]
+                Subnet2["Public Subnet 2"]
+            end
+
+            ALB["Application Load Balancer"]
+            TG["Target Group"]
+
+            Subnet1 --> ALB
+            Subnet2 --> ALB
+            ALB --> TG
+            TG --> EC2
+        end
+
+        S3["Amazon S3 - Terraform Remote State"]
+    end
+
+    User --> IGW
+    IGW --> ALB
 ```
+
+**Note:** The ALB is deployed across two public subnets. The EC2 instance is deployed in one public subnet. S3 stores Terraform remote state separately from application traffic.
 
 ## AWS Services Used
 
@@ -62,6 +83,9 @@ The application was successfully deployed and accessed through the ALB DNS name.
 jenkins-aws-ecs-cicd/
 │
 ├── backend-bootstrap/
+│   ├── main.tf
+│   └── provider.tf
+│
 ├── environments/
 │   ├── dev/
 │   └── prod/
@@ -82,7 +106,8 @@ jenkins-aws-ecs-cicd/
 ├── outputs.tf
 ├── versions.tf
 ├── terraform.tfvars.example
-└── .gitignore
+├── .gitignore
+└── README.md
 ```
 
 ## Deployment
@@ -114,7 +139,7 @@ To remove the provisioned infrastructure:
 terraform destroy -var-file="environments/dev/terraform.tfvars"
 ```
 
-Note: The S3 remote state bucket is managed separately and is not deleted by the main infrastructure destroy command.
+**Note:** The S3 remote state bucket is managed separately and is not deleted by the main infrastructure destroy command.
 
 ## Screenshots
 
@@ -132,4 +157,4 @@ Project screenshots will be added here.
 
 Amit Kumar Maurya
 
-GitHub: [AMITMAURYA321](https://github.com/AMITMAURYA321)
+GitHub:https://github.com/AMITMAURYA321/terraform-aws-devops
