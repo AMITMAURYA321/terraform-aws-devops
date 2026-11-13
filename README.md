@@ -153,6 +153,36 @@ Project screenshots will be added here.
 - SSH access should be restricted to the user's current public IP.
 - The ALB currently uses HTTP. HTTPS requires an ACM certificate and an HTTPS listener.
 
+
+## Screenshots
+
+Project screenshots will be added here.
+## Screenshots
+
+### 1. Application Running Through ALB
+
+![Apache Webpage](screenshots/apache-webpage.png)
+
+### 2. Terraform Infrastructure Deployment
+
+![Terraform Apply Output](screenshots/outputs.png)
+
+### 3. Terraform Resources
+![Terraform Resources](screenshots/resources.png)
+
+
+### 4. VPC and Subnets
+![VPC and Subnets](screenshots/vpc-subnet.png)
+
+### 5. EC2 Instance
+![EC2 Instance](screenshots/ec2-instance.png)
+
+### 6. Application Load Balancer
+![Application Load Balancer](screenshots/alb.png)
+
+### 7. Terraform Destroy
+![Terraform Destroy](screenshots/destroy.png)
+
 ## Author
 
 Amit Kumar Maurya
